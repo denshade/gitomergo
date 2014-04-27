@@ -1,0 +1,11 @@
+{
+    "name": "Showpad Central Station",
+    "description": "The Showpad Central Station distribution",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "nikic/php-parser": "1.0.*@dev"
+    }
+}
