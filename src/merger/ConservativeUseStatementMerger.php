@@ -2,10 +2,14 @@
 
 namespace merger;
 
+use merger\usestatementmerger\UseStatement;
 use merger\usestatementmerger\UseStatementTraverser;
 use PhpParser\Lexer;
+use PhpParser\Node\Stmt\UseUse;
+use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use merger\ChangedNode;
+use ReflectionClass;
 
 class ConservativeUseStatementMerger
 {
@@ -59,24 +63,22 @@ class ConservativeUseStatementMerger
     }
 
     /**
-     * @param $filePath
-     * @return \string[]
+     * @param array $myStatements
+     * @return array
      */
-    private function getUseStatements($filePath)
+    private function filterOutUseStatements($myStatements)
     {
-        $myFileContents = file_get_contents($filePath);
-
-        $parser = new Parser(new Lexer());
-
-        try {
-            $stmts = $parser->parse($myFileContents);
-            $traverser     = new \PhpParser\NodeTraverser;
-            $useVisitor = new UseStatementTraverser();
-            $traverser->addVisitor($useVisitor);
-            $traverser->traverse($stmts);
-            return $useVisitor->getFullUseStatements();
-        } catch (PhpParser\Error $e) {
-            echo 'Parse Error: ', $e->getMessage();
+        $results = array();
+        $traverser     = new NodeTraverser;
+        $useStatementTrav = new UseStatementTraverser();
+        $traverser->addVisitor($useStatementTrav);
+        $traverser->traverse($myStatements);
+        foreach($useStatementTrav->getFullUseStatements() as $useStatementText)
+        {
+            $useStatement = new UseStatement();
+            $useStatement->setFullQualifiedName($useStatementText);
+            $results []= $useStatement;
         }
+        return $results;
     }
 }
