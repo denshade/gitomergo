@@ -9,9 +9,6 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\NodeTraverser;
-use PhpParser\Parser;
-use merger\ChangedNode;
-use ReflectionClass;
 
 class ConservativeUseStatementMerger
 {
