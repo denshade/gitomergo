@@ -16,12 +16,12 @@ class PhpMerger
         $theirStmts = $parser->parse($theirFileCode);
 
         $useMerger = new ConservativeUseStatementMerger();
-        $useMerger->merge($myStmts, $theirStmts);
+        $resultStmts = $useMerger->merge($myStmts, $theirStmts);
         //Merge use statements.
         //Merge all functions
         //Merge the attributes.
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-        $code = $prettyPrinter->prettyPrint($stmts);
+        $code = $prettyPrinter->prettyPrint($resultStmts);
         return $code;
     }
 }

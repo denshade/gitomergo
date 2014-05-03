@@ -5,6 +5,8 @@ namespace merger;
 use merger\usestatementmerger\UseStatement;
 use merger\usestatementmerger\UseStatementTraverser;
 use PhpParser\Lexer;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
@@ -25,20 +27,20 @@ class ConservativeUseStatementMerger
         foreach($myUseStatements as $myUseStatement)
         {
             /**
-             * @var UseUse $myUseStatement
+             * @var UseStatement $myUseStatement
              */
-            $fullQualifiedNameMap[$myUseStatement->getName()] = $myUseStatement->isAddedUse();
+            $fullQualifiedNameMap []= $myUseStatement->getFullQualifiedName();
         }
         foreach($theirUseStatements as $theirUseStatement)
         {
             /**
-             * @var ChangedNode $myUseStatement
+             * @var UseStatement $theirUseStatement
              */
-            $fullQualifiedNameMap[$theirUseStatement->getName()] = $theirUseStatement->isAddedUse();
+            $fullQualifiedNameMap []= $theirUseStatement->getFullQualifiedName();
         }
 
-        $this->writeUseStatements($myStatements, $fullQualifiedNameMap);
-
+        $resultStatements = $this->writeUseStatements($myStatements, $fullQualifiedNameMap);
+        return $resultStatements;
         /*
          * Get my change set on use statements.
          * Get their change set on use statements.
@@ -80,5 +82,30 @@ class ConservativeUseStatementMerger
             $results []= $useStatement;
         }
         return $results;
+    }
+
+    private function writeUseStatements($myStatements, $fullQualifiedNameMap)
+    {
+        sort($fullQualifiedNameMap);
+        $uses = [];
+        foreach($fullQualifiedNameMap as $fullUse)
+        {
+            $parts = explode('\\', $fullUse);
+            $useUse = new UseUse(
+                new Name($parts)
+            );
+            $uses []= $useUse;
+        }
+        $useCollection = new Use_($uses);
+        //Namespace_
+        //subnodes = array(
+        //stmts = array(
+        //Use_
+        //subnodes = array
+        //uses = array
+        //UseUse
+        //TODO this can be wrong. Not all code trees have a name space.s
+        $myStatements[0]->stmts[0] = $useCollection;
+        return $myStatements;
     }
 }

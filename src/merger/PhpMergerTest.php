@@ -22,9 +22,7 @@ class PhpMergerTest extends \PHPUnit_Framework_TestCase
     public function verifySimpleUseStatementMerge()
     {
         $merger = new PhpMerger();
-        $left = '
-<?php
-namespace hello;
+        $left = '<?php namespace hello;
 
 use \DateTime;
 class hello
@@ -33,20 +31,16 @@ class hello
 }
 ';
 
-        $right = '
-<?php
-namespace hello;
+        $right = '<?php namespace hello;
 use \DateTimeZone;
 class hello
 {
 
 }
 ';
-        $result = '
-<?php
-namespace hello;
-use \DateTime;
-use \DateTimeZone;
+        $result = 'namespace hello;
+
+use DateTime, DateTimeZone;
 class hello
 {
 
