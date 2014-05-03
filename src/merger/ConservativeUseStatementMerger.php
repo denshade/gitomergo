@@ -38,27 +38,6 @@ class ConservativeUseStatementMerger
 
         $resultStatements = $this->writeUseStatements($myStatements, $fullQualifiedNameMap);
         return $resultStatements;
-        /*
-         * Get my change set on use statements.
-         * Get their change set on use statements.
-         * Get the added use statements in myFile.
-         * Those are added anyway.
-         * Get the locally removed use statements.
-         *
-         * Sort the use statements by name.
-         * If the use statement is added AND removed. It is part of the use statements.
-         * If the use statement is added. It is part of the use statements.
-         *
-         * If the use statement is removed from my code and nothing happens to their code. Cleaned by the unused use statement detector.
-         *
-         *
-         * (Followed by a unused use statement detector).
-         */
-/*        $myUseStatements = $this->getUseStatements($myFile);
-        $theirUseStatements = $this->getUseStatements($theirUseStatements);
-        $resultUseStatements = array_unique(array_merge($theirUseStatements, $myUseStatements));
-        return $resultUseStatements;
-*/
     }
 
     /**
