@@ -81,7 +81,17 @@ class ConservativeUseStatementMerger
         //uses = array
         //UseUse
         //TODO this can be wrong. Not all code trees have a name space.s
-        $myStatements[0]->stmts[0] = $useCollection;
+        if (count($uses) === 0)
+        {
+            return $myStatements;
+        }
+        if (! ($myStatements[0]->stmts[0] instanceof Use_))
+        {
+            array_unshift($myStatements[0]->stmts, $useCollection);
+        } else
+        {
+            $myStatements[0]->stmts[0] = $useCollection;
+        }
         return $myStatements;
     }
 }

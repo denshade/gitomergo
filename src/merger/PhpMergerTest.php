@@ -7,7 +7,7 @@ namespace merger;
 class PhpMergerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     *
+     * @test
      */
     public function verifySimpleMerge()
     {
@@ -16,39 +16,5 @@ class PhpMergerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("class hello\n{\n}", $hi);
     }
 
-    /**
-     * @test
-     */
-    public function verifySimpleUseStatementMerge()
-    {
-        $merger = new PhpMerger();
-        $left = '<?php namespace hello;
-
-use \DateTime;
-class hello
-{
-
-}
-';
-
-        $right = '<?php namespace hello;
-use \DateTimeZone;
-class hello
-{
-
-}
-';
-        $result = 'namespace hello;
-
-use DateTime, DateTimeZone;
-class hello
-{
-
-}
-';
-
-        $hi = $merger->mergeFiles($left, $right);
-        $this->assertEquals($result, $hi);
-    }
 }
  
